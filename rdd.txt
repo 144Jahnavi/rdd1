@@ -1,0 +1,41 @@
+from pyspark import SparkContext
+sc = SparkContext.getOrCreate()
+
+#cube each number
+
+rdd = sc.parallelize([1,2,3,4,5])
+result = rdd.map(lambda x: x**3).collect()
+print(result)
+
+
+#flatMap words
+
+data = ["Hello World", "Apache Spark", "Big Data"]
+rdd = sc.parallelize(data)
+
+result = rdd.flatMap(lambda x: x.split(" ")).collect()
+print(result)
+
+
+# number divisible by 3
+
+rdd = sc.parallelize(range(1,21))
+result = rdd.filter(lambda x: x % 3 == 0).collect()
+print(result)
+
+
+
+#4 word count
+
+text = "spark is fast spark is big spark is powerful"
+
+rdd = sc.parallelize([text])
+
+result = (
+    rdd.flatMap(lambda x: x.split(" "))
+       .map(lambda x: (x,1))
+       .reduceByKey(lambda a,b: a+b)
+       .collect()
+)
+
+print(result)
