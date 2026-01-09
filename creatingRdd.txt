@@ -1,0 +1,76 @@
+
+## 1. Creating RDD from JSON
+
+### Sample JSON file (data.json)
+
+```
+{"id":1,"name":"Janu","age":23}
+{"id":2,"name":"Anu","age":22}
+```
+
+### Code
+
+```python
+rdd = sc.textFile("data.json")
+import json
+json_rdd = rdd.map(lambda x: json.loads(x))
+```
+
+### Result
+
+Each row becomes a Python dictionary.
+
+---
+
+## 2. Creating RDD from CSV
+
+### Sample CSV file (data.csv)
+
+```
+id,name,age
+1,Janu,23
+2,Anu,22
+```
+
+### Code
+
+```python
+rdd = sc.textFile("data.csv")
+header = rdd.first()
+data_rdd = rdd.filter(lambda x: x != header).map(lambda x: x.split(","))
+```
+
+### Result
+
+Each row becomes a list.
+
+---
+
+
+## 3. Converting RDD to DataFrame with Schema
+
+```python
+from pyspark.sql.types import *
+
+rdd = sc.parallelize([
+    (1,"Janu",23),
+    (2,"Anu",22)
+])
+
+schema = StructType([
+    StructField("id", IntegerType(), True),
+    StructField("name", StringType(), True),
+    StructField("age", IntegerType(), True)
+])
+
+df = spark.createDataFrame(rdd, schema)
+df.show()
+```
+
+---
+
+
+
+
+
+
